@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "117854616818",
+    "firebase_url": "https://snapchatklon-60fb7.firebaseio.com",
+    "project_id": "snapchatklon-60fb7",
+    "storage_bucket": "snapchatklon-60fb7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117854616818:android:5cb79c36a9b5765a",
+        "android_client_info": {
+          "package_name": "com.example.marcu.snapchatklon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "117854616818-8al3blr3drpsrai8d7p38o95oub6gp9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marcu.snapchatklon",
+            "certificate_hash": "435303ee11aa2dd7b79617d287ab16eb6991152c"
+          }
+        },
+        {
+          "client_id": "117854616818-tufcsmifq7c9tf43astjmdvhltdpk09k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7XRA-23QRjmCUFrncTvZ79OtIRT5RGx4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "117854616818-tufcsmifq7c9tf43astjmdvhltdpk09k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
