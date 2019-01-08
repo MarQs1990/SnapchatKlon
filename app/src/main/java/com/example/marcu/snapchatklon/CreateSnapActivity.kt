@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AlertDialog
-import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import java.io.ByteArrayOutputStream
@@ -17,6 +16,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
+import kotlinx.android.synthetic.main.activity_create_snap.*
 
 
 class CreateSnapActivity : AppCompatActivity() {
@@ -31,9 +31,12 @@ class CreateSnapActivity : AppCompatActivity() {
 
         createSnapImageView = findViewById(R.id.createSnapImageView)
         messageEditText = findViewById(R.id.messageText)
+
+        chooseImageBtn.setOnClickListener { chooseImageClicked() }
+        nextBtn.setOnClickListener {nextClicked()}
     }
 
-    fun chooseImageClicked(view: View){
+    fun chooseImageClicked(){
         if(checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                 requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
             }else{
@@ -95,7 +98,8 @@ class CreateSnapActivity : AppCompatActivity() {
         }
     }
 
-    fun nextClicked(view: View){
+    fun nextClicked(){
+        showProgress(true, upload_snap_form, upload_snap_progress)
         val bitmap = (createSnapImageView?.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -113,6 +117,7 @@ class CreateSnapActivity : AppCompatActivity() {
             intent.putExtra("imageUrl", downloadUrl.toString())
             intent.putExtra("imageName", imageName)
             intent.putExtra("message", messageEditText?.text.toString())
+            showProgress(false, upload_snap_form, upload_snap_progress)
             startActivity(intent)
         }
     }

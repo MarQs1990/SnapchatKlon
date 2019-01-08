@@ -9,17 +9,24 @@ import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import com.example.marcu.snapchatklon.showProgress
 
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(){
+    override fun onResume() {
+        super.onResume()
+        password.setText("")
+        email.setText("")
+        auth.signOut()
+    }
 
     private var mAuthTask: UserLoginTask? = null
     private lateinit var auth: FirebaseAuth
@@ -35,6 +42,8 @@ class LoginActivity : AppCompatActivity(){
             }
             false
         })
+
+
 
         email.setText("")
         password.setText("")
@@ -87,47 +96,9 @@ class LoginActivity : AppCompatActivity(){
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true)
+            showProgress(true, login_form, login_progress)
             mAuthTask = UserLoginTask(emailStr, passwordStr)
             mAuthTask!!.execute(null as Void?)
-        }
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private fun showProgress(show: Boolean) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-            login_form.animate()
-                .setDuration(shortAnimTime)
-                .alpha((if (show) 0 else 1).toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
-                    }
-                })
-
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_progress.animate()
-                .setDuration(shortAnimTime)
-                .alpha((if (show) 1 else 0).toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-                    }
-                })
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
         }
     }
 
@@ -143,7 +114,6 @@ class LoginActivity : AppCompatActivity(){
                 auth.signInWithEmailAndPassword(mEmail, mPassword)
                     .addOnCompleteListener(this@LoginActivity) { task ->
                         if (task.isSuccessful) {
-                            val user = auth.currentUser
                             login()
                         } else {
                             auth.createUserWithEmailAndPassword(mEmail, mPassword)
@@ -168,15 +138,18 @@ class LoginActivity : AppCompatActivity(){
 
         override fun onCancelled() {
             mAuthTask = null
-            showProgress(false)
+            showProgress(false, login_form, login_progress)
         }
     }
 
     fun login(){
         val intent = Intent(applicationContext, SnapsActivity::class.java)
         startActivity(intent)
-        showProgress(false)
+        showProgress(false, login_form, login_progress)
+        finish()
     }
 
 }
+
+
 

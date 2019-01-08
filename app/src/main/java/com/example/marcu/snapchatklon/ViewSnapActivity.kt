@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.activity_view_snap.*
 import java.lang.IllegalArgumentException
 
 import java.net.URL
@@ -26,9 +27,8 @@ class ViewSnapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_snap)
-
         messageTextView = findViewById(R.id.messageTextView)
-        val snapImageView = findViewById<ImageView>(R.id.SnapImageView)
+        //val snapImageView = findViewById<ImageView>(R.id.SnapImageView)
 
         messageTextView?.text = intent.getStringExtra("message")
 
@@ -37,13 +37,15 @@ class ViewSnapActivity : AppCompatActivity() {
         try{
             FirebaseStorage.getInstance().getReference()
                 .child("images").child(intent.getStringExtra("imageName")).downloadUrl.addOnSuccessListener{tmpUri ->
-                myImage = task.execute(tmpUri.toString()).get()
-                snapImageView?.setImageBitmap(myImage)
+
+                task.execute(tmpUri.toString())
+                //snapImageView?.setImageBitmap(myImage)
             }
 
         }catch(e:java.lang.Exception){
             e.printStackTrace()
         }
+
     }
 
     override fun onBackPressed() {
@@ -58,13 +60,22 @@ class ViewSnapActivity : AppCompatActivity() {
 
     }
 
+
     inner class ImageDownloader : AsyncTask<String, Void, Bitmap>() {
+
+        override fun onPostExecute(result: Bitmap?) {
+            val snapImageView = findViewById<ImageView>(R.id.SnapImageView)
+            snapImageView.setImageBitmap(result)
+        }
+
         override fun doInBackground(vararg urls: String?): Bitmap? {
             try{
                 val url = URL(urls[0])
                 val connection = url.openConnection() as HttpsURLConnection
                 connection.connect()
                 val inputStream = connection.inputStream
+
+
 
                 return BitmapFactory.decodeStream(inputStream)
             }catch(e: Exception){
